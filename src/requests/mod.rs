@@ -143,6 +143,10 @@ pub enum Opcode {
     PrepareKeyAttestation = 0x001F,
     /// CanDoCrypto operation
     CanDoCrypto = 0x0020,
+    /// PsaMacCompute operation
+    PsaMacCompute = 0x0021,
+    /// PsaMacCompare operation
+    PsaMacCompare = 0x0022,
 }
 
 impl Opcode {
@@ -171,6 +175,8 @@ impl Opcode {
             | Opcode::PsaGenerateRandom
             | Opcode::PsaHashCompute
             | Opcode::PsaHashCompare
+            | Opcode::PsaMacCompute
+            | Opcode::PsaMacCompare
             | Opcode::PsaAeadEncrypt
             | Opcode::PsaAeadDecrypt
             | Opcode::PsaCipherEncrypt
@@ -206,6 +212,8 @@ impl Opcode {
             | Opcode::PsaGenerateRandom
             | Opcode::PsaHashCompute
             | Opcode::PsaHashCompare
+            | Opcode::PsaMacCompute
+            | Opcode::PsaMacCompare
             | Opcode::PsaAeadEncrypt
             | Opcode::PsaAeadDecrypt
             | Opcode::PsaCipherEncrypt
