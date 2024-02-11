@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 //use super::convert_psa_algorithm;
 use super::generated_ops::psa_mac_verify::{Operation as OperationProto, Result as ResultProto};
-use crate::operations::psa_mac_compare::{Operation, Result};
+use crate::operations::psa_mac_verify::{Operation, Result};
 use crate::requests::ResponseStatus;
 use std::convert::{TryFrom, TryInto};
 use log::error;
@@ -15,7 +15,7 @@ impl TryFrom<OperationProto> for Operation {
         let alg = proto_op
                 .alg
                 .ok_or_else(|| {
-                    error!("The alg field of PsaMacCompare::Operation message is not set (mandatory field).");
+                    error!("The alg field of PsaMacVerify::Operation message is not set (mandatory field).");
                     ResponseStatus::InvalidEncoding
                 })?
                 .try_into()?;
@@ -68,7 +68,7 @@ mod test {
         Operation as OperationProto, Result as ResultProto,
     };
     use super::super::{Convert, ProtobufConverter};
-    use crate::operations::psa_mac_compare::{Operation, Result};
+    use crate::operations::psa_mac_verify::{Operation, Result};
     use crate::operations::NativeOperation;
     use crate::requests::{request::RequestBody, response::ResponseBody, Opcode};
     use std::convert::TryInto;
@@ -91,7 +91,7 @@ mod test {
     }
 
     #[test]
-    fn mac_compare_proto_to_op() {
+    fn mac_verify_proto_to_op() {
         let key_name = "test".to_string();
         let input = vec![0x11, 0x22, 0x33];
         let mac = vec![0x44, 0x55, 0x66];
@@ -112,7 +112,7 @@ mod test {
     }
 
     #[test]
-    fn mac_compare_bad_proto_to_op() {
+    fn mac_verify_bad_proto_to_op() {
         let key_name = "test".to_string();
         let input = vec![0x11, 0x22, 0x33];
         let mac = vec![0x44, 0x55, 0x66];
@@ -127,7 +127,7 @@ mod test {
     }
 
     #[test]
-    fn mac_compare_op_to_proto() {
+    fn mac_verify_op_to_proto() {
         let key_name = "test".to_string();
         let input = vec![0x11, 0x22, 0x33];
         let mac = vec![0x44, 0x55, 0x66];
@@ -148,13 +148,13 @@ mod test {
     }
 
     #[test]
-    fn mac_compare_proto_to_resp() {
+    fn mac_verify_proto_to_resp() {
         let proto = ResultProto {};
         let _res: Result = proto.try_into().expect("Failed conversion");
     }
 
     #[test]
-    fn mac_compare_resp_to_proto() {
+    fn mac_verify_resp_to_proto() {
         let res = Result {};
         let _proto: ResultProto = res.try_into().expect("Failed conversion");
     }
@@ -170,11 +170,11 @@ mod test {
             alg: alg.unwrap().try_into().unwrap(),
         };
         let body = CONVERTER
-            .operation_to_body(NativeOperation::PsaMacCompare(op))
+            .operation_to_body(NativeOperation::PsaMacVerify(op))
             .expect("Failed to convert request");
 
         assert!(CONVERTER
-            .body_to_operation(body, Opcode::PsaMacCompare)
+            .body_to_operation(body, Opcode::PsaMacVerify)
             .is_ok());
     }
 
@@ -183,7 +183,7 @@ mod test {
         let resp_body =
             ResponseBody::from_bytes(vec![0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77, 0x88]);
         assert!(CONVERTER
-            .body_to_result(resp_body, Opcode::PsaMacCompare)
+            .body_to_result(resp_body, Opcode::PsaMacVerify)
             .is_err());
     }
 
@@ -193,7 +193,7 @@ mod test {
             RequestBody::from_bytes(vec![0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77, 0x88]);
 
         assert!(CONVERTER
-            .body_to_operation(req_body, Opcode::PsaMacCompare)
+            .body_to_operation(req_body, Opcode::PsaMacVerify)
             .is_err());
     }
 }

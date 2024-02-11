@@ -18,7 +18,7 @@ mod convert_psa_verify_message;
 mod convert_psa_hash_compute;
 mod convert_psa_hash_compare;
 mod convert_psa_mac_compute;
-mod convert_psa_mac_compare;
+mod convert_psa_mac_verify;
 mod convert_list_providers;
 mod convert_list_opcodes;
 mod convert_list_authenticators;
@@ -68,7 +68,7 @@ use generated_ops::psa_generate_key as psa_generate_key_proto;
 use generated_ops::psa_generate_random as psa_generate_random_proto;
 use generated_ops::psa_hash_compare as psa_hash_compare_proto;
 use generated_ops::psa_hash_compute as psa_hash_compute_proto;
-use generated_ops::psa_mac_verify as psa_mac_compare_proto;
+use generated_ops::psa_mac_verify as psa_mac_verify_proto;
 use generated_ops::psa_mac_compute as psa_mac_compute_proto;
 use generated_ops::psa_import_key as psa_import_key_proto;
 use generated_ops::psa_raw_key_agreement as psa_raw_key_agreement_proto;
@@ -213,9 +213,9 @@ impl Convert for ProtobufConverter {
                 body.bytes(),
                 psa_hash_compute_proto::Operation
             ))),
-            Opcode::PsaMacCompare => Ok(NativeOperation::PsaMacCompare(wire_to_native!(
+            Opcode::PsaMacVerify => Ok(NativeOperation::PsaMacVerify(wire_to_native!(
                 body.bytes(),
-                psa_mac_compare_proto::Operation
+                psa_mac_verify_proto::Operation
             ))),
             Opcode::PsaMacCompute => Ok(NativeOperation::PsaMacCompute(wire_to_native!(
                 body.bytes(),
@@ -318,8 +318,8 @@ impl Convert for ProtobufConverter {
             NativeOperation::PsaHashCompute(operation) => Ok(RequestBody::from_bytes(
                 native_to_wire!(operation, psa_hash_compute_proto::Operation),
             )),
-            NativeOperation::PsaMacCompare(operation) => Ok(RequestBody::from_bytes(
-                native_to_wire!(operation, psa_mac_compare_proto::Operation),
+            NativeOperation::PsaMacVerify(operation) => Ok(RequestBody::from_bytes(
+                native_to_wire!(operation, psa_mac_verify_proto::Operation),
             )),
             NativeOperation::PsaMacCompute(operation) => Ok(RequestBody::from_bytes(
                 native_to_wire!(operation, psa_mac_compute_proto::Operation),
@@ -440,9 +440,9 @@ impl Convert for ProtobufConverter {
                 body.bytes(),
                 psa_hash_compute_proto::Result
             ))),
-            Opcode::PsaMacCompare => Ok(NativeResult::PsaMacCompare(wire_to_native!(
+            Opcode::PsaMacVerify => Ok(NativeResult::PsaMacVerify(wire_to_native!(
                 body.bytes(),
-                psa_mac_compare_proto::Result
+                psa_mac_verify_proto::Result
             ))),
             Opcode::PsaMacCompute => Ok(NativeResult::PsaMacCompute(wire_to_native!(
                 body.bytes(),
@@ -560,9 +560,9 @@ impl Convert for ProtobufConverter {
                 result,
                 psa_hash_compute_proto::Result
             ))),
-            NativeResult::PsaMacCompare(result) => Ok(ResponseBody::from_bytes(native_to_wire!(
+            NativeResult::PsaMacVerify(result) => Ok(ResponseBody::from_bytes(native_to_wire!(
                 result,
-                psa_mac_compare_proto::Result
+                psa_mac_verify_proto::Result
             ))),
             NativeResult::PsaMacCompute(result) => Ok(ResponseBody::from_bytes(native_to_wire!(
                 result,

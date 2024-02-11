@@ -145,8 +145,8 @@ pub enum Opcode {
     CanDoCrypto = 0x0020,
     /// PsaMacCompute operation
     PsaMacCompute = 0x0021,
-    /// PsaMacCompare operation
-    PsaMacCompare = 0x0022,
+    /// PsaMacVerify operation
+    PsaMacVerify = 0x0022,
 }
 
 impl Opcode {
@@ -176,7 +176,7 @@ impl Opcode {
             | Opcode::PsaHashCompute
             | Opcode::PsaHashCompare
             | Opcode::PsaMacCompute
-            | Opcode::PsaMacCompare
+            | Opcode::PsaMacVerify
             | Opcode::PsaAeadEncrypt
             | Opcode::PsaAeadDecrypt
             | Opcode::PsaCipherEncrypt
@@ -213,7 +213,7 @@ impl Opcode {
             | Opcode::PsaHashCompute
             | Opcode::PsaHashCompare
             | Opcode::PsaMacCompute
-            | Opcode::PsaMacCompare
+            | Opcode::PsaMacVerify
             | Opcode::PsaAeadEncrypt
             | Opcode::PsaAeadDecrypt
             | Opcode::PsaCipherEncrypt

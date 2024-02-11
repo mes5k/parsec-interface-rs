@@ -20,7 +20,7 @@ pub mod psa_verify_hash;
 pub mod psa_hash_compute;
 pub mod psa_hash_compare;
 pub mod psa_mac_compute;
-pub mod psa_mac_compare;
+pub mod psa_mac_verify;
 pub mod psa_asymmetric_encrypt;
 pub mod psa_asymmetric_decrypt;
 pub mod psa_aead_encrypt;
@@ -85,8 +85,8 @@ pub enum NativeOperation {
     PsaHashCompare(psa_hash_compare::Operation),
     /// PsaMacCompute operation
     PsaMacCompute(psa_mac_compute::Operation),
-    /// PsaMacCompare operation
-    PsaMacCompare(psa_mac_compare::Operation),
+    /// PsaMacVerify operation
+    PsaMacVerify(psa_mac_verify::Operation),
     /// PsaAsymmetricEncrypt operation
     PsaAsymmetricEncrypt(psa_asymmetric_encrypt::Operation),
     /// PsaAsymmetricDecrypt operation
@@ -127,7 +127,7 @@ impl NativeOperation {
             NativeOperation::PsaHashCompute(_) => Opcode::PsaHashCompute,
             NativeOperation::PsaHashCompare(_) => Opcode::PsaHashCompare,
             NativeOperation::PsaMacCompute(_) => Opcode::PsaMacCompute,
-            NativeOperation::PsaMacCompare(_) => Opcode::PsaMacCompare,
+            NativeOperation::PsaMacVerify(_) => Opcode::PsaMacVerify,
             NativeOperation::PsaImportKey(_) => Opcode::PsaImportKey,
             NativeOperation::PsaExportPublicKey(_) => Opcode::PsaExportPublicKey,
             NativeOperation::PsaExportKey(_) => Opcode::PsaExportKey,
@@ -192,8 +192,8 @@ pub enum NativeResult {
     PsaVerifyHash(psa_verify_hash::Result),
     /// PsaMacCompute result
     PsaMacCompute(psa_mac_compute::Result),
-    /// PsaMacCompare result
-    PsaMacCompare(psa_mac_compare::Result),
+    /// PsaMacVerify result
+    PsaMacVerify(psa_mac_verify::Result),
     /// PsaAsymmetricEncrypt result
     PsaAsymmetricEncrypt(psa_asymmetric_encrypt::Result),
     /// PsaAsymmetricDecrypt result
@@ -235,7 +235,7 @@ impl NativeResult {
             NativeResult::PsaHashCompute(_) => Opcode::PsaHashCompute,
             NativeResult::PsaHashCompare(_) => Opcode::PsaHashCompare,
             NativeResult::PsaMacCompute(_) => Opcode::PsaMacCompute,
-            NativeResult::PsaMacCompare(_) => Opcode::PsaMacCompare,
+            NativeResult::PsaMacVerify(_) => Opcode::PsaMacVerify,
             NativeResult::PsaExportPublicKey(_) => Opcode::PsaExportPublicKey,
             NativeResult::PsaExportKey(_) => Opcode::PsaExportKey,
             NativeResult::ListOpcodes(_) => Opcode::ListOpcodes,
@@ -436,9 +436,9 @@ impl From<psa_mac_compute::Operation> for NativeOperation {
     }
 }
 
-impl From<psa_mac_compare::Operation> for NativeOperation {
-    fn from(op: psa_mac_compare::Operation) -> Self {
-        NativeOperation::PsaMacCompare(op)
+impl From<psa_mac_verify::Operation> for NativeOperation {
+    fn from(op: psa_mac_verify::Operation) -> Self {
+        NativeOperation::PsaMacVerify(op)
     }
 }
 
@@ -578,9 +578,9 @@ impl From<psa_mac_compute::Result> for NativeResult {
     }
 }
 
-impl From<psa_mac_compare::Result> for NativeResult {
-    fn from(op: psa_mac_compare::Result) -> Self {
-        NativeResult::PsaMacCompare(op)
+impl From<psa_mac_verify::Result> for NativeResult {
+    fn from(op: psa_mac_verify::Result) -> Self {
+        NativeResult::PsaMacVerify(op)
     }
 }
 

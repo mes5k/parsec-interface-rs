@@ -1,6 +1,6 @@
 // Copyright 2020 Contributors to the Parsec project.
 // SPDX-License-Identifier: Apache-2.0
-//! # PsaMacCompare operation
+//! # PsaMacVerify operation
 //!
 //! Compute the MAC value of a message and compare it with a reference value.
 
