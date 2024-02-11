@@ -2,12 +2,12 @@
 // SPDX-License-Identifier: Apache-2.0
 //! # PsaMacVerify operation
 //!
-//! Compute the MAC value of a message and compare it with a reference value.
+//! Compute the MAC value of a message and verify it against a reference value.
 
 use crate::operations::psa_algorithm::Mac;
 use derivative::Derivative;
 
-/// Native object for MAC compare operations.
+/// Native object for MAC verify operations.
 #[derive(Derivative)]
 #[derivative(Debug)]
 pub struct Operation {
@@ -23,6 +23,6 @@ pub struct Operation {
     pub mac: zeroize::Zeroizing<Vec<u8>>,
 }
 
-/// Native object for MAC compare result.
+/// Native object for MAC verify result.
 #[derive(Debug, Default, Copy, Clone)]
 pub struct Result;
