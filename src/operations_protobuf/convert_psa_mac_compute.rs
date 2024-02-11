@@ -64,6 +64,7 @@ impl TryFrom<Result> for ResultProto {
 #[cfg(test)]
 mod test {
     use super::super::generated_ops::psa_algorithm as algorithm_proto;
+    use super::super::generated_ops::psa_mac_compute;
     use super::super::generated_ops::psa_mac_compute::{
         Operation as OperationProto, Result as ResultProto,
     };
@@ -107,6 +108,19 @@ mod test {
 
         assert_eq!(op.input, input.into());
         assert_eq!(op.alg, alg.unwrap().try_into().unwrap());
+    }
+
+    #[test]
+    fn mac_compute_bad_proto_to_op() {
+        let key_name = "test".to_string();
+        let input = vec![0x11, 0x22, 0x33];
+
+        let mut proto: OperationProto = Default::default();
+        proto.key_name = key_name.clone();
+        proto.input = input.clone();
+        proto.alg = None;
+
+        assert!(<psa_mac_compute::Operation as TryInto<Operation>>::try_into(proto).is_err());
     }
 
     #[test]
