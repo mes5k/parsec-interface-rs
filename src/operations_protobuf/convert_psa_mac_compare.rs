@@ -60,100 +60,124 @@ impl TryFrom<Result> for ResultProto {
     }
 }
 
-//#[cfg(test)]
-//mod test {
-//    use super::super::generated_ops::psa_algorithm as algorithm_proto;
-//    use super::super::generated_ops::psa_hash_compare::{
-//        Operation as OperationProto, Result as ResultProto,
-//    };
-//    use super::super::{Convert, ProtobufConverter};
-//    use crate::operations::psa_algorithm::Hash;
-//    use crate::operations::psa_hash_compare::{Operation, Result};
-//    use crate::operations::NativeOperation;
-//    use crate::requests::{request::RequestBody, response::ResponseBody, Opcode};
-//    use std::convert::TryInto;
-//    use zeroize::Zeroizing;
-//
-//    static CONVERTER: ProtobufConverter = ProtobufConverter {};
-//
-//    #[test]
-//    fn hash_compare_proto_to_op() {
-//        let mut proto: OperationProto = Default::default();
-//        let input = vec![0x11, 0x22, 0x33];
-//        let hash = vec![0x44, 0x55, 0x66];
-//        proto.input = input.clone();
-//        proto.hash = hash.clone();
-//        proto.alg = algorithm_proto::algorithm::Hash::Sha256.into();
-//
-//        let op: Operation = proto.try_into().expect("Failed to convert");
-//
-//        assert_eq!(op.input, input.into());
-//        assert_eq!(op.hash, hash.into());
-//        assert_eq!(op.alg, Hash::Sha256);
-//    }
-//
-//    #[test]
-//    fn hash_compare_op_to_proto() {
-//        let input = vec![0x11, 0x22, 0x33];
-//        let hash = vec![0x44, 0x55, 0x66];
-//        let alg = Hash::Sha256;
-//
-//        let op = Operation {
-//            alg,
-//            input: input.clone().into(),
-//            hash: hash.clone().into(),
-//        };
-//
-//        let proto: OperationProto = op.try_into().expect("Failed to convert");
-//
-//        assert_eq!(proto.input, input);
-//        assert_eq!(proto.hash, hash);
-//    }
-//
-//    #[test]
-//    fn hash_compare_proto_to_resp() {
-//        let proto = ResultProto {};
-//        let _res: Result = proto.try_into().expect("Failed conversion");
-//    }
-//
-//    #[test]
-//    fn hash_compare_resp_to_proto() {
-//        let res = Result {};
-//        let _proto: ResultProto = res.try_into().expect("Failed conversion");
-//    }
-//
-//    #[test]
-//    fn op_hash_compare_e2e() {
-//        let op = Operation {
-//            input: Zeroizing::new(vec![0x11, 0x22, 0x33]),
-//            hash: Zeroizing::new(vec![0x44, 0x55, 0x66]),
-//            alg: Hash::Sha256,
-//        };
-//        let body = CONVERTER
-//            .operation_to_body(NativeOperation::PsaHashCompare(op))
-//            .expect("Failed to convert request");
-//
-//        assert!(CONVERTER
-//            .body_to_operation(body, Opcode::PsaHashCompare)
-//            .is_ok());
-//    }
-//
-//    #[test]
-//    fn result_from_mangled_resp_body() {
-//        let resp_body =
-//            ResponseBody::from_bytes(vec![0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77, 0x88]);
-//        assert!(CONVERTER
-//            .body_to_result(resp_body, Opcode::PsaHashCompare)
-//            .is_err());
-//    }
-//
-//    #[test]
-//    fn op_from_mangled_req_body() {
-//        let req_body =
-//            RequestBody::from_bytes(vec![0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77, 0x88]);
-//
-//        assert!(CONVERTER
-//            .body_to_operation(req_body, Opcode::PsaHashCompute)
-//            .is_err());
-//    }
-//}
+#[cfg(test)]
+mod test {
+    use super::super::generated_ops::psa_algorithm as algorithm_proto;
+    use super::super::generated_ops::psa_mac_verify::{
+        Operation as OperationProto, Result as ResultProto,
+    };
+    use super::super::{Convert, ProtobufConverter};
+    use crate::operations::psa_mac_compare::{Operation, Result};
+    use crate::operations::NativeOperation;
+    use crate::requests::{request::RequestBody, response::ResponseBody, Opcode};
+    use std::convert::TryInto;
+    use zeroize::Zeroizing;
+
+    static CONVERTER: ProtobufConverter = ProtobufConverter {};
+
+    fn make_mac() -> Option<algorithm_proto::algorithm::Mac> {
+        Some(algorithm_proto::algorithm::Mac {
+            variant: Some(algorithm_proto::algorithm::mac::Variant::FullLength(
+                algorithm_proto::algorithm::mac::FullLength {
+                    variant: Some( algorithm_proto::algorithm::mac::full_length::Variant::Hmac (
+                        algorithm_proto::algorithm::mac::full_length::Hmac {
+                            hash_alg: algorithm_proto::algorithm::Hash::Sha256.into()
+                        }
+                    ))
+                }
+            ))
+        })
+    }
+
+    #[test]
+    fn mac_compare_proto_to_op() {
+        let key_name = "test".to_string();
+        let input = vec![0x11, 0x22, 0x33];
+        let mac = vec![0x44, 0x55, 0x66];
+        let alg = make_mac();
+
+        let mut proto: OperationProto = Default::default();
+        proto.key_name = key_name.clone();
+        proto.input = input.clone();
+        proto.mac = mac.clone();
+        proto.alg = alg.clone();
+
+        let op: Operation = proto.try_into().expect("Failed to convert");
+
+        assert_eq!(op.key_name, key_name);
+        assert_eq!(op.input, input.into());
+        assert_eq!(op.mac, mac.into());
+        assert_eq!(op.alg, alg.unwrap().try_into().unwrap());
+    }
+
+    #[test]
+    fn mac_compare_op_to_proto() {
+        let key_name = "test".to_string();
+        let input = vec![0x11, 0x22, 0x33];
+        let mac = vec![0x44, 0x55, 0x66];
+        let alg = make_mac();
+
+        let op = Operation {
+            key_name: key_name.clone().into(),
+            alg: alg.unwrap().try_into().unwrap(),
+            input: input.clone().into(),
+            mac: mac.clone().into(),
+        };
+
+        let proto: OperationProto = op.try_into().expect("Failed to convert");
+
+        assert_eq!(proto.input, input);
+        assert_eq!(proto.mac, mac);
+        assert_eq!(proto.key_name, key_name);
+    }
+
+    #[test]
+    fn mac_compare_proto_to_resp() {
+        let proto = ResultProto {};
+        let _res: Result = proto.try_into().expect("Failed conversion");
+    }
+
+    #[test]
+    fn mac_compare_resp_to_proto() {
+        let res = Result {};
+        let _proto: ResultProto = res.try_into().expect("Failed conversion");
+    }
+
+    #[test]
+    fn op_hash_compare_e2e() {
+        let alg = make_mac();
+        let key_name = "test".to_string();
+        let op = Operation {
+            key_name: key_name.clone().into(),
+            input: Zeroizing::new(vec![0x11, 0x22, 0x33]),
+            mac: Zeroizing::new(vec![0x44, 0x55, 0x66]),
+            alg: alg.unwrap().try_into().unwrap(),
+        };
+        let body = CONVERTER
+            .operation_to_body(NativeOperation::PsaMacCompare(op))
+            .expect("Failed to convert request");
+
+        assert!(CONVERTER
+            .body_to_operation(body, Opcode::PsaMacCompare)
+            .is_ok());
+    }
+
+    #[test]
+    fn result_from_mangled_resp_body() {
+        let resp_body =
+            ResponseBody::from_bytes(vec![0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77, 0x88]);
+        assert!(CONVERTER
+            .body_to_result(resp_body, Opcode::PsaMacCompare)
+            .is_err());
+    }
+
+    #[test]
+    fn op_from_mangled_req_body() {
+        let req_body =
+            RequestBody::from_bytes(vec![0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77, 0x88]);
+
+        assert!(CONVERTER
+            .body_to_operation(req_body, Opcode::PsaMacCompare)
+            .is_err());
+    }
+}
