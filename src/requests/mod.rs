@@ -127,6 +127,10 @@ pub enum Opcode {
     PsaCipherEncrypt = 0x0014,
     /// PsaCipherDecrypt
     PsaCipherDecrypt = 0x0015,
+    /// PsaMacCompute operation
+    PsaMacCompute = 0x0016,
+    /// PsaMacVerify operation
+    PsaMacVerify = 0x0017,
     /// PsaSignMessage operation
     PsaSignMessage = 0x0018,
     /// PsaVerifyMessage operation
@@ -143,10 +147,6 @@ pub enum Opcode {
     PrepareKeyAttestation = 0x001F,
     /// CanDoCrypto operation
     CanDoCrypto = 0x0020,
-    /// PsaMacCompute operation
-    PsaMacCompute = 0x0021,
-    /// PsaMacVerify operation
-    PsaMacVerify = 0x0022,
 }
 
 impl Opcode {
