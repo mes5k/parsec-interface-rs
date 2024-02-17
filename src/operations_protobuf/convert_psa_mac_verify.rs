@@ -4,8 +4,8 @@
 use super::generated_ops::psa_mac_verify::{Operation as OperationProto, Result as ResultProto};
 use crate::operations::psa_mac_verify::{Operation, Result};
 use crate::requests::ResponseStatus;
-use std::convert::{TryFrom, TryInto};
 use log::error;
+use std::convert::{TryFrom, TryInto};
 
 impl TryFrom<OperationProto> for Operation {
     type Error = ResponseStatus;
@@ -80,13 +80,13 @@ mod test {
         Some(algorithm_proto::algorithm::Mac {
             variant: Some(algorithm_proto::algorithm::mac::Variant::FullLength(
                 algorithm_proto::algorithm::mac::FullLength {
-                    variant: Some( algorithm_proto::algorithm::mac::full_length::Variant::Hmac (
+                    variant: Some(algorithm_proto::algorithm::mac::full_length::Variant::Hmac(
                         algorithm_proto::algorithm::mac::full_length::Hmac {
-                            hash_alg: algorithm_proto::algorithm::Hash::Sha256.into()
-                        }
-                    ))
-                }
-            ))
+                            hash_alg: algorithm_proto::algorithm::Hash::Sha256.into(),
+                        },
+                    )),
+                },
+            )),
         })
     }
 
