@@ -28,18 +28,11 @@ impl Operation {
     /// Validate the contents of the operation against the attributes of the key it targets
     ///
     /// This method checks that:
-    /// * the key policy allows decrypting messages
     /// * the key policy allows the encryption algorithm requested in the operation
-    /// * the key type is compatible with the requested algorithm
-    /// * the message to decrypt is valid (not length 0)
-    /// * the nonce is valid (not length 0)
-    pub fn validate(&self, _key_attributes: Attributes) -> crate::requests::Result<()> {
-        //key_attributes.can_decrypt_message()?;
-        //key_attributes.permits_alg(self.alg.into())?;
-        //key_attributes.compatible_with_alg(self.alg.into())?;
-        //if self.ciphertext.is_empty() || self.nonce.is_empty() {
-        //    return Err(ResponseStatus::PsaErrorInvalidArgument);
-        //}
+    /// * there is sufficient buffer size for the MAC of the specified algorithm, if compatible
+    pub fn validate(&self, key_attributes: Attributes) -> crate::requests::Result<()> {
+        key_attributes.permits_alg(self.alg.into())?;
+        let _size = key_attributes.mac_length(self.alg.into())?;
         Ok(())
     }
 }
