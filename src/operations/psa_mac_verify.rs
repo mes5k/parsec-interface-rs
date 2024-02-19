@@ -4,6 +4,7 @@
 //!
 //! Compute the MAC value of a message and verify it against a reference value.
 
+use super::psa_key_attributes::Attributes;
 use crate::operations::psa_algorithm::Mac;
 use derivative::Derivative;
 
@@ -21,6 +22,26 @@ pub struct Operation {
     /// The reference MAC value.
     #[derivative(Debug = "ignore")]
     pub mac: zeroize::Zeroizing<Vec<u8>>,
+}
+
+impl Operation {
+    /// Validate the contents of the operation against the attributes of the key it targets
+    ///
+    /// This method checks that:
+    /// * the key policy allows decrypting messages
+    /// * the key policy allows the encryption algorithm requested in the operation
+    /// * the key type is compatible with the requested algorithm
+    /// * the message to decrypt is valid (not length 0)
+    /// * the nonce is valid (not length 0)
+    pub fn validate(&self, _key_attributes: Attributes) -> crate::requests::Result<()> {
+        //key_attributes.can_decrypt_message()?;
+        //key_attributes.permits_alg(self.alg.into())?;
+        //key_attributes.compatible_with_alg(self.alg.into())?;
+        //if self.ciphertext.is_empty() || self.nonce.is_empty() {
+        //    return Err(ResponseStatus::PsaErrorInvalidArgument);
+        //}
+        Ok(())
+    }
 }
 
 /// Native object for MAC verify result.

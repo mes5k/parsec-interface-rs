@@ -353,6 +353,12 @@ dependencies = [
 ]
 
 [[package]]
+name = "pkg-config"
+version = "0.3.30"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "d231b230927b5e4ad203db57bbcbee2802f6bce620b1e4a9024a07d94e2907ec"
+
+[[package]]
 name = "proc-macro2"
 version = "1.0.67"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -417,8 +423,6 @@ dependencies = [
 [[package]]
 name = "psa-crypto"
 version = "0.12.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "89c2256e525b9a45ec3bbb3382a43dd8809240279e0aab8ea7ee220e9295445b"
 dependencies = [
  "log",
  "psa-crypto-sys",
@@ -429,11 +433,10 @@ dependencies = [
 [[package]]
 name = "psa-crypto-sys"
 version = "0.12.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f170cac3a328e1678916b276067ec170a5a51db1b9b8b4c00b44c2839819a963"
 dependencies = [
  "cc",
  "cmake",
+ "pkg-config",
  "regex",
  "walkdir",
 ]
