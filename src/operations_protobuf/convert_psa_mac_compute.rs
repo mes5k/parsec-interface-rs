@@ -11,7 +11,7 @@ impl TryFrom<OperationProto> for Operation {
     type Error = ResponseStatus;
 
     fn try_from(proto_op: OperationProto) -> std::result::Result<Self, Self::Error> {
-        let key_name = proto_op.key_name.into();
+        let key_name = proto_op.key_name;
         let alg = proto_op
                 .alg
                 .ok_or_else(|| {
@@ -130,7 +130,7 @@ mod test {
         let alg = make_mac();
 
         let op = Operation {
-            key_name: key_name.clone().into(),
+            key_name: key_name.clone(),
             alg: alg.clone().unwrap().try_into().unwrap(),
             input: input.clone().into(),
         };
@@ -168,7 +168,7 @@ mod test {
     fn op_hash_compute_sign_e2e() {
         let alg = make_mac();
         let op = Operation {
-            key_name: "test".to_string().into(),
+            key_name: "test".to_string(),
             input: vec![0x11, 0x22, 0x33].into(),
             alg: alg.clone().unwrap().try_into().unwrap(),
         };

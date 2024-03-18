@@ -31,7 +31,7 @@ impl Operation {
     pub fn validate(&self, key_attributes: Attributes) -> crate::requests::Result<()> {
         key_attributes.can_sign_hash()?;
         key_attributes.permits_alg(self.alg.into())?;
-        let size = key_attributes.mac_length(self.alg.into())?;
+        let size = key_attributes.mac_length(self.alg)?;
         println!("SIZE: {}",size);
         Ok(())
     }
@@ -60,7 +60,8 @@ mod tests {
         // set_sign_hash is needed for mac_compute, set_verify_hash is needed for mac_verify
         let _ = usage.set_sign_hash().set_verify_hash();
         // Attributes defined in psa-cryto/src/types/keys.rs, gets re-exported by parsec-client-rust
-        let attributes = Attributes {
+        
+        Attributes {
             key_type: Type::Hmac,
             bits: 256,
             lifetime: Lifetime::Volatile,
@@ -68,8 +69,7 @@ mod tests {
                 usage_flags: usage,
                 permitted_algorithms: permitted_alg,
             },
-        };
-        attributes
+        }
     }
 
     #[test]

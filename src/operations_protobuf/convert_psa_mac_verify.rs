@@ -11,7 +11,7 @@ impl TryFrom<OperationProto> for Operation {
     type Error = ResponseStatus;
 
     fn try_from(proto_op: OperationProto) -> std::result::Result<Self, Self::Error> {
-        let key_name = proto_op.key_name.into();
+        let key_name = proto_op.key_name;
         let alg = proto_op
                 .alg
                 .ok_or_else(|| {
@@ -134,7 +134,7 @@ mod test {
         let alg = make_mac();
 
         let op = Operation {
-            key_name: key_name.clone().into(),
+            key_name: key_name.clone(),
             alg: alg.unwrap().try_into().unwrap(),
             input: input.clone().into(),
             mac: mac.clone().into(),
@@ -164,7 +164,7 @@ mod test {
         let alg = make_mac();
         let key_name = "test".to_string();
         let op = Operation {
-            key_name: key_name.clone().into(),
+            key_name: key_name.clone(),
             input: Zeroizing::new(vec![0x11, 0x22, 0x33]),
             mac: Zeroizing::new(vec![0x44, 0x55, 0x66]),
             alg: alg.unwrap().try_into().unwrap(),
