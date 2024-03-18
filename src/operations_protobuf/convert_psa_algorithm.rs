@@ -101,10 +101,11 @@ impl TryFrom<SignHashProto> for SignHash {
     type Error = ResponseStatus;
 
     fn try_from(sign_hash_val: SignHashProto) -> Result<Self> {
-        match sign_hash_val.variant.ok_or_else(|| {
+        let sign_hash_variant = sign_hash_val.variant.ok_or_else(|| {
             error!("The SignHash variant used is not supported.");
             ResponseStatus::InvalidEncoding
-        })? {
+        })?;
+        match sign_hash_variant {
             sign_hash::Variant::Any(_) => Ok(SignHash::Any),
             sign_hash::Variant::Specific(hash_val) => Ok(SignHash::Specific(
                 HashProto::try_from(hash_val)?.try_into()?,
@@ -131,10 +132,11 @@ impl TryFrom<FullLengthMacProto> for FullLengthMac {
     type Error = ResponseStatus;
 
     fn try_from(alg: FullLengthMacProto) -> Result<Self> {
-        match alg.variant.ok_or_else(|| {
+        let alg_variant = alg.variant.ok_or_else(|| {
             error!("The FullLengthMac variant used is not supported.");
             ResponseStatus::InvalidEncoding
-        })? {
+        })?;
+        match alg_variant {
             mac::full_length::Variant::Hmac(hmac) => Ok(FullLengthMac::Hmac {
                 hash_alg: HashProto::try_from(hmac.hash_alg)?.try_into()?,
             }),
@@ -172,10 +174,11 @@ impl TryFrom<MacProto> for Mac {
     type Error = ResponseStatus;
 
     fn try_from(alg: MacProto) -> Result<Self> {
-        match alg.variant.ok_or_else(|| {
+        let alg_variant = alg.variant.ok_or_else(|| {
             error!("The Mac variant used is not supported.");
             ResponseStatus::InvalidEncoding
-        })? {
+        })?;
+        match alg_variant {
             mac::Variant::FullLength(full_length) => Ok(Mac::FullLength(full_length.try_into()?)),
             mac::Variant::Truncated(truncated) => Ok(Mac::Truncated {
                 mac_alg: truncated.mac_alg.ok_or_else(|| {
@@ -296,10 +299,11 @@ impl TryFrom<AeadProto> for Aead {
     type Error = ResponseStatus;
 
     fn try_from(alg: AeadProto) -> Result<Self> {
-        match alg.variant.ok_or_else(|| {
+        let alg_variant = alg.variant.ok_or_else(|| {
             error!("The Aead variant used is not supported.");
             ResponseStatus::InvalidEncoding
-        })? {
+        })?;
+        match alg_variant {
             aead::Variant::AeadWithDefaultLengthTag(aead_with_default_length_tag) => {
                 Ok(Aead::AeadWithDefaultLengthTag(AeadWithDefaultLengthTagProto::try_from(aead_with_default_length_tag)?.try_into()?))
             },
@@ -341,10 +345,11 @@ impl TryFrom<AsymmetricSignatureProto> for AsymmetricSignature {
     type Error = ResponseStatus;
 
     fn try_from(alg: AsymmetricSignatureProto) -> Result<Self> {
-        match alg.variant.ok_or_else(|| {
+        let alg_variant = alg.variant.ok_or_else(|| {
             error!("The AsymmetricSignature variant used is not supported.");
             ResponseStatus::InvalidEncoding
-        })? {
+        })?;
+        match alg_variant {
             asymmetric_signature::Variant::RsaPkcs1v15Sign(rsa_pkcs1v15_sign) => {
                 Ok(AsymmetricSignature::RsaPkcs1v15Sign {
                     hash_alg: rsa_pkcs1v15_sign
@@ -446,10 +451,11 @@ impl TryFrom<AsymmetricEncryptionProto> for AsymmetricEncryption {
     type Error = ResponseStatus;
 
     fn try_from(alg: AsymmetricEncryptionProto) -> Result<Self> {
-        match alg.variant.ok_or_else(|| {
+        let alg_variant = alg.variant.ok_or_else(|| {
             error!("The AsymmetricSignature variant used is not supported.");
             ResponseStatus::InvalidEncoding
-        })? {
+        })?;
+        match alg_variant {
             asymmetric_encryption::Variant::RsaPkcs1v15Crypt(_) => {
                 Ok(AsymmetricEncryption::RsaPkcs1v15Crypt)
             }
@@ -519,10 +525,11 @@ impl TryFrom<KeyAgreementProto> for KeyAgreement {
     type Error = ResponseStatus;
 
     fn try_from(alg: KeyAgreementProto) -> Result<Self> {
-        match alg.variant.ok_or_else(|| {
+        let alg_variant = alg.variant.ok_or_else(|| {
             error!("The KeyAgreement variant used is not supported.");
             ResponseStatus::InvalidEncoding
-        })? {
+        })?;
+        match alg_variant {
             key_agreement::Variant::Raw(raw) => Ok(KeyAgreement::Raw(RawKeyAgreementProto::try_from(raw)?.try_into()?)),
             key_agreement::Variant::WithKeyDerivation(with_key_derivation) => Ok(KeyAgreement::WithKeyDerivation {
                 ka_alg: RawKeyAgreementProto::try_from(with_key_derivation.ka_alg)?.try_into()?,
@@ -563,10 +570,11 @@ impl TryFrom<KeyDerivationProto> for KeyDerivation {
     type Error = ResponseStatus;
 
     fn try_from(alg: KeyDerivationProto) -> Result<Self> {
-        match alg.variant.ok_or_else(|| {
+        let alg_variant = alg.variant.ok_or_else(|| {
             error!("The KeyDerivation variant used is not supported.");
             ResponseStatus::InvalidEncoding
-        })? {
+        })?;
+        match alg_variant {
             key_derivation::Variant::Hkdf(hkdf) => Ok(KeyDerivation::Hkdf {
                 hash_alg: HashProto::try_from(hkdf.hash_alg)?.try_into()?,
             }),
@@ -616,10 +624,11 @@ impl TryFrom<AlgorithmProto> for Algorithm {
     type Error = ResponseStatus;
 
     fn try_from(alg: AlgorithmProto) -> Result<Self> {
-        match alg.variant.ok_or_else(|| {
+        let alg_variant = alg.variant.ok_or_else(|| {
             error!("The Algorithm variant used is not supported.");
             ResponseStatus::InvalidEncoding
-        })? {
+        })?;
+        match alg_variant {
             algorithm::Variant::None(_) => Ok(Algorithm::None),
             algorithm::Variant::Hash(hash) => {
                 Ok(Algorithm::Hash(HashProto::try_from(hash)?.try_into()?))

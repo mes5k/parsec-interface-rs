@@ -97,11 +97,12 @@ mod test {
         let mac = vec![0x44, 0x55, 0x66];
         let alg = make_mac();
 
-        let mut proto: OperationProto = Default::default();
-        proto.key_name = key_name.clone();
-        proto.input = input.clone();
-        proto.mac = mac.clone();
-        proto.alg = alg.clone();
+        let proto: OperationProto = OperationProto {
+            key_name: key_name.clone(),
+            input: input.clone(),
+            mac: mac.clone(),
+            alg: alg.clone()
+        };
 
         let op: Operation = proto.try_into().expect("Failed to convert");
 
@@ -117,11 +118,12 @@ mod test {
         let input = vec![0x11, 0x22, 0x33];
         let mac = vec![0x44, 0x55, 0x66];
 
-        let mut proto: OperationProto = Default::default();
-        proto.key_name = key_name.clone();
-        proto.input = input.clone();
-        proto.mac = mac.clone();
-        proto.alg = None;
+        let proto: OperationProto = OperationProto {
+            key_name: key_name.clone(),
+            input: input.clone(),
+            mac: mac.clone(),
+            alg: None
+        };
 
         assert!(<psa_mac_verify::Operation as TryInto<Operation>>::try_into(proto).is_err());
     }

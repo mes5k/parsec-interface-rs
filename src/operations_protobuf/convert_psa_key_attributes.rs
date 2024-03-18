@@ -178,10 +178,11 @@ impl TryFrom<KeyTypeProto> for Type {
     type Error = ResponseStatus;
 
     fn try_from(key_type_proto: KeyTypeProto) -> Result<Self> {
-        match key_type_proto.variant.ok_or_else(|| {
+        let key_type_variant = key_type_proto.variant.ok_or_else(|| {
             error!("variant field of Type message is empty.");
             ResponseStatus::InvalidEncoding
-        })? {
+        })?;
+        match key_type_variant {
             key_type::Variant::RawData(_) => Ok(Type::RawData),
             key_type::Variant::Hmac(_) => Ok(Type::Hmac),
             key_type::Variant::Derive(_) => Ok(Type::Derive),
