@@ -127,6 +127,10 @@ pub enum Opcode {
     PsaCipherEncrypt = 0x0014,
     /// PsaCipherDecrypt
     PsaCipherDecrypt = 0x0015,
+    /// PsaMacCompute operation
+    PsaMacCompute = 0x0016,
+    /// PsaMacVerify operation
+    PsaMacVerify = 0x0017,
     /// PsaSignMessage operation
     PsaSignMessage = 0x0018,
     /// PsaVerifyMessage operation
@@ -171,6 +175,8 @@ impl Opcode {
             | Opcode::PsaGenerateRandom
             | Opcode::PsaHashCompute
             | Opcode::PsaHashCompare
+            | Opcode::PsaMacCompute
+            | Opcode::PsaMacVerify
             | Opcode::PsaAeadEncrypt
             | Opcode::PsaAeadDecrypt
             | Opcode::PsaCipherEncrypt
@@ -206,6 +212,8 @@ impl Opcode {
             | Opcode::PsaGenerateRandom
             | Opcode::PsaHashCompute
             | Opcode::PsaHashCompare
+            | Opcode::PsaMacCompute
+            | Opcode::PsaMacVerify
             | Opcode::PsaAeadEncrypt
             | Opcode::PsaAeadDecrypt
             | Opcode::PsaCipherEncrypt

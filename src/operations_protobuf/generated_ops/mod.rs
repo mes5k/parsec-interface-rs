@@ -29,6 +29,8 @@ pub mod psa_algorithm;
 pub mod psa_generate_random;
 pub mod psa_hash_compute;
 pub mod psa_hash_compare;
+pub mod psa_mac_compute;
+pub mod psa_mac_verify;
 pub mod psa_raw_key_agreement;
 pub mod can_do_crypto;
 pub mod attest_key;
@@ -172,6 +174,7 @@ empty_clear_message!(psa_verify_hash::Result);
 empty_clear_message!(psa_verify_message::Result);
 empty_clear_message!(psa_generate_random::Operation);
 empty_clear_message!(psa_hash_compare::Result);
+empty_clear_message!(psa_mac_verify::Result);
 empty_clear_message!(can_do_crypto::Operation);
 empty_clear_message!(can_do_crypto::Result);
 empty_clear_message!(prepare_key_attestation::Operation);
@@ -328,6 +331,25 @@ impl ClearProtoMessage for psa_hash_compare::Operation {
     fn clear_message(&mut self) {
         self.input.zeroize();
         self.hash.zeroize();
+    }
+}
+
+impl ClearProtoMessage for psa_mac_compute::Operation {
+    fn clear_message(&mut self) {
+        self.input.zeroize();
+    }
+}
+
+impl ClearProtoMessage for psa_mac_compute::Result {
+    fn clear_message(&mut self) {
+        self.mac.zeroize();
+    }
+}
+
+impl ClearProtoMessage for psa_mac_verify::Operation {
+    fn clear_message(&mut self) {
+        self.input.zeroize();
+        self.mac.zeroize();
     }
 }
 
